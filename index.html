@@ -19,24 +19,21 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center">
-                    <svg class="h-8 w-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
                     <span class="font-bold text-2xl text-gray-800">FixYourCity</span>
                 </div>
                 
                 <div class="hidden md:flex md:items-center md:space-x-8">
-                    <a href="#" class="text-gray-600 hover:text-blue-600 font-medium">Report an Issue</a>
-                    <a href="#my-reports" class="text-gray-600 hover:text-blue-600 font-medium">My Reports</a>
-                    <a href="#explore" class="text-gray-600 hover:text-blue-600 font-medium">Explore Issues</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-600 font-medium open-report-modal">Report an Issue</a>
+                    <a href="my-reports.html" class="text-gray-600 hover:text-blue-600 font-medium">My Reports</a>
+                    <a href="explore.html" class="text-gray-600 hover:text-blue-600 font-medium">Explore Issues</a>
                     <a href="issue-status.html" class="text-gray-600 hover:text-blue-600 font-medium">Issue Status</a>
-                    <a href="#how-it-works" class="text-gray-600 hover:text-blue-600 font-medium">How It Works</a>
-                    <a href="#about" class="text-gray-600 hover:text-blue-600 font-medium">About Us</a>
+                    <a href="how-it-works.html" class="text-gray-600 hover:text-blue-600 font-medium">How It Works</a>
+                    <a href="about.html" class="text-gray-600 hover:text-blue-600 font-medium">About Us</a>
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="#" class="text-gray-600 hover:text-blue-600 font-medium">Login</a>
-                    <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">Sign Up</a>
+                    <a href="login.html" class="text-gray-600 hover:text-blue-600 font-medium">Login</a>
+                    <a href="signup.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">Sign Up</a>
                 </div>
                 
                 <div class="md:hidden flex items-center">
@@ -53,14 +50,14 @@
 
         <div class="md:hidden hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Report an Issue</a>
-                <a href="#my-reports" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">My Reports</a>
-                <a href="#explore" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Explore Issues</a>
+                <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium open-report-modal">Report an Issue</a>
+                <a href="my-reports.html" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">My Reports</a>
+                <a href="explore.html" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Explore Issues</a>
                 <a href="issue-status.html" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Issue Status</a>
-                <a href="#how-it-works" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">How It Works</a>
-                <a href="#about" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">About Us</a>
-                <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Login</a>
-                <a href="#" class="bg-blue-600 text-white block w-full text-center px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">Sign Up</a>
+                <a href="how-it-works.html" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">How It Works</a>
+                <a href="about.html" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">About Us</a>
+                <a href="login.html" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Login</a>
+                <a href="signup.html" class="bg-blue-600 text-white block w-full text-center px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">Sign Up</a>
             </div>
         </div>
     </header>
@@ -71,7 +68,7 @@
                 <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4">Empowering Citizens.</h1>
                 <h2 class="text-4xl md:text-6xl font-bold tracking-tight mb-6">Building Better Cities.</h2>
                 <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto">Report civic issues you care about in <span class="font-bold">Delhi & Greater Noida</span>. Let's build a more accountable and responsive community together.</p>
-                <button id="report-issue-hero-btn" class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg text-lg font-medium hover:bg-blue-700 transition duration-300">
+                <button id="report-issue-hero-btn" class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg text-lg font-medium hover:bg-blue-700 transition duration-300 open-report-modal">
                     Report an Issue Now
                 </button>
             </div>
@@ -227,19 +224,19 @@
                 <div>
                     <h5 class="text-lg font-semibold text-white mb-4">Quick Links</h5>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-white">Report an Issue</a></li>
-                        <li><a href="#explore" class="hover:text-white">Explore Issues</a></li>
+                        <li><a href="#" class="hover:text-white open-report-modal">Report an Issue</a></li>
+                        <li><a href="explore.html" class="hover:text-white">Explore Issues</a></li>
                         <li><a href="issue-status.html" class="hover:text-white">Issue Status</a></li>
-                        <li><a href="#" class="hover:text-white">Login / Sign Up</a></li>
-                        <li><a href="#about" class="hover:text-white">About Us</a></li>
+                        <li><a href="login.html" classs="hover:text-white">Login / Sign Up</a></li>
+                        <li><a href="about.html" class="hover:text-white">About Us</a></li>
                     </ul>
                 </div>
                 <div>
                     <h5 class="text-lg font-semibold text-white mb-4">Legal</h5>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-white">Contact Us</a></li>
+                        <li><a href="privacy.html" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="contact.html" class="hover:text-white">Contact Us</a></li>
                     </ul>
                 </div>
                 <div>
@@ -281,20 +278,20 @@
             <form id="report-form" class="space-y-4">
                 <div>
                     <label for="issue-category" class="block text-sm font-medium text-gray-700 mb-1">Issue Category</label>
-                    <select id="issue-category" name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>Select a category</option>
-                        <option value="pothole">Pothole</option>
-                        <option value="garbage">Garbage & Illegal Dumping</option>
-                        <option value="streetlight">Broken Streetlight</option>
-                        <option value="nuisance">Public Nuisance</option>
-                        <option value="graffiti">Graffiti</option>
-                        <option value="other">Other</option>
+                    <select id="issue-category" name="category" required class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select a category</option>
+                        <option value="Pothole">Pothole</option>
+                        <option value="Garbage & Dumping">Garbage & Illegal Dumping</option>
+                        <option value="Broken Streetlight">Broken Streetlight</option>
+                        <option value="Public Nuisance">Public Nuisance</option>
+                        <option value="Graffiti">Graffiti</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 
                 <div>
                     <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location / Address</label>
-                    <input type="text" id="location" name="location" placeholder="e.g., Near Sector 18 Metro, Noida" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="location" name="location" required placeholder="e.g., Near Sector 18 Metro, Noida" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <button type="button" class="text-sm text-blue-600 hover:underline mt-1">Use my current location</button>
                 </div>
 
@@ -323,11 +320,6 @@
         </div>
     </div>
     
-    <div id="success-message" class="hidden fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
-        Report submitted successfully!
-    </div>
-
-
     <script src="script.js"></script>
 
 </body>
