@@ -1,0 +1,10 @@
+/* Custom styles */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.hero-bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://placehold.co/1600x900/444/666?text=Delhi/Noida+Cityscape');
+    background-size: cover;
+    background-position: center;
+}
