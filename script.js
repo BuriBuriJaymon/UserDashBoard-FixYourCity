@@ -14,26 +14,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Report Issue Modal ---
     const reportModal = document.getElementById('report-modal');
-    const openModalBtnHero = document.getElementById('report-issue-hero-btn');
     const closeModalBtn = document.getElementById('close-modal-btn');
     
+    // ### CHANGED: Find ALL buttons/links that open the modal ###
+    const openModalBtns = document.querySelectorAll('.open-report-modal');
+
     const openModal = () => reportModal.classList.remove('hidden');
     const closeModal = () => reportModal.classList.add('hidden');
 
-    openModalBtnHero.addEventListener('click', openModal);
+    // Add click event to all open modal buttons/links
+    openModalBtns.forEach(btn => {
+        btn.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent page jump for <a> links
+            openModal();
+        });
+    });
+
     closeModalBtn.addEventListener('click', closeModal);
-    
-    // Also find the "Report an Issue" link in the nav and make it open the modal
-    // Note: This requires adding an ID to that link in the HTML, e.g., id="report-issue-nav-btn"
-    // For now, only the hero button is wired. Let's wire up all links with that href.
-    
-    // Get all "Report an Issue" links (desktop, mobile)
-    const openModalLinks = document.querySelectorAll('a[href="#"], button'); // A bit broad, let's be more specific
-    
-    // A better way: Find all elements that should open the modal
-    // We already have the hero button. Let's find the nav links.
-    // The original code only wired the hero button. Sticking to "DON'T DO ANY OTHER CHANGES".
-    // If you want the nav links to work, you'd add IDs and event listeners for them too.
     
     // Close modal if user clicks outside the modal content
     reportModal.addEventListener('click', (event) => {
@@ -44,26 +41,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Form Submission ---
     const reportForm = document.getElementById('report-form');
-    const successMessage = document.getElementById('success-message');
 
+    // ### CHANGED: Updated form submission logic ###
     reportForm.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevent actual form submission
         
-        // You would typically send this data to a server here.
-        // For this demo, we'll just close the modal and show a success message.
+        // 1. Get data from the form
+        const category = document.getElementById('issue-category').value;
+        const location = document.getElementById('location').value;
+        const description = document.getElementById('description').value;
+
+        // Basic validation
+        if (!category || !location) {
+            alert('Please select a category and provide a location.');
+            return;
+        }
+
+        // 2. Create a new issue object
+        const newIssue = {
+            id: "#F7C" + Math.floor(105 + Math.random() * 900), // Generate a new ID
+            category: category,
+            location: location,
+            status: 'Pending' // New issues are always Pending
+        };
+
+        // 3. Get existing issues from localStorage or create a new array
+        let issues = JSON.parse(localStorage.getItem('fixYourCityIssues')) || [];
+
+        // 4. Add the new issue
+        issues.push(newIssue);
+
+        // 5. Save the updated issues array back to localStorage
+        localStorage.setItem('fixYourCityIssues', JSON.stringify(issues));
         
+        // 6. Close the modal
         closeModal();
         
-        // Show success message
-        successMessage.classList.remove('hidden');
-        
-        // Hide success message after 3 seconds
-        setTimeout(() => {
-            successMessage.classList.add('hidden');
-        }, 3000);
-
-        // Reset the form
+        // 7. Reset the form
         reportForm.reset();
+
+        // 8. Redirect to the issue status page
+        window.location.href = 'issue-status.html';
     });
 
 });
