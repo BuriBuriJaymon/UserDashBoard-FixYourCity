@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Basic font styling to match */
         body {
             font-family: 'Inter', sans-serif;
         }
@@ -21,9 +20,6 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center">
-                    <svg class="h-8 w-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
                     <span class="font-bold text-2xl text-gray-800">FixYourCity</span>
                 </div>
                 <div>
@@ -51,47 +47,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#F7C101</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Pothole</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Sector 62, Near Fortis Hospital</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Resolved
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#F7C102</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Garbage & Dumping</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Alpha 1, Commercial Belt, Gr. Noida</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            In Progress
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#F7C103</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Broken Streetlight</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Pari Chowk (Underpass)</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            Pending
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#F7C104</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Public Nuisance</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Botanical Garden Metro Station</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Resolved
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -99,5 +55,79 @@
         </section>
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Default issues to show if localStorage is empty
+            const defaultIssues = [
+                {
+                    id: "#F7C101",
+                    category: "Pothole",
+                    location: "Sector 62, Near Fortis Hospital",
+                    status: "Resolved"
+                },
+                {
+                    id: "#F7C102",
+                    category: "Garbage & Dumping",
+                    location: "Alpha 1, Commercial Belt, Gr. Noida",
+                    status: "In Progress"
+                },
+                {
+                    id: "#F7C103",
+                    category: "Broken Streetlight",
+                    location: "Pari Chowk (Underpass)",
+                    status: "Pending"
+                },
+                {
+                    id: "#F7C104",
+                    category: "Public Nuisance",
+                    location: "Botanical Garden Metro Station",
+                    status: "Resolved"
+                }
+            ];
+
+            // Try to get issues from localStorage
+            let issues = JSON.parse(localStorage.getItem('fixYourCityIssues'));
+
+            // If localStorage is empty, initialize it with default issues
+            if (!issues || issues.length === 0) {
+                issues = defaultIssues;
+                localStorage.setItem('fixYourCityIssues', JSON.stringify(defaultIssues));
+            }
+
+            const tableBody = document.querySelector('#issue-status table tbody');
+            tableBody.innerHTML = ''; // Clear any existing content
+
+            // Helper function to get the correct CSS class for status
+            function getStatusClass(status) {
+                switch (status) {
+                    case 'Resolved':
+                        return 'bg-green-100 text-green-800';
+                    case 'In Progress':
+                        return 'bg-yellow-100 text-yellow-800';
+                    case 'Pending':
+                    default:
+                        return 'bg-red-100 text-red-800';
+                }
+            }
+
+            // Populate the table with all issues
+            issues.forEach(issue => {
+                const row = document.createElement('tr');
+                const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.location}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="${statusClasses}">
+                            ${issue.status}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
+    </script>
 </body>
 </html>
