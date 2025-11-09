@@ -31,10 +31,14 @@
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="login.html" class="text-gray-600 hover:text-blue-600 font-medium">Login</a>
-                    <a href="signup.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">Sign Up</a>
+                    <div id="auth-links" class="flex items-center space-x-4">
+                        <a href="login.html" class="text-gray-600 hover:text-blue-600 font-medium">Login</a>
+                        <a href="signup.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">Sign Up</a>
+                    </div>
+                    <div id="user-links" class="hidden items-center space-x-4">
+                        <a href="#" id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-300 font-medium">Logout</a>
+                    </div>
                 </div>
-                
                 <div class="md:hidden flex items-center">
                     <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
                         <span class="sr-only">Open main menu</span>
@@ -54,9 +58,15 @@
                 <a href="explore.html" target="_blank" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Explore Issues</a>
                 <a href="performance.html" target="_blank" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Performance Dashboard</a>
                 <a href="#how-it-works" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">About Us</a>
-                <a href="login.html" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Login</a>
-                <a href="signup.html" class="bg-blue-600 text-white block w-full text-center px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">Sign Up</a>
-            </div>
+                
+                <div id="mobile-auth-links">
+                    <a href="login.html" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Login</a>
+                    <a href="signup.html" class="bg-blue-600 text-white block w-full text-center px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">Sign Up</a>
+                </div>
+                <div id="mobile-user-links" class="hidden">
+                    <a href="#" id="mobile-logout-btn" class="bg-red-500 text-white block w-full text-center px-4 py-2 rounded-lg shadow hover:bg-red-600 transition duration-300 font-medium">Logout</a>
+                </div>
+                </div>
         </div>
     </header>
 
