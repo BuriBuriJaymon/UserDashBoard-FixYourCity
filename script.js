@@ -1,28 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
-        
+    
     // --- Mobile Menu Toggle ---
     const menuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     const openIcon = document.getElementById('menu-open-icon');
     const closeIcon = document.getElementById('menu-close-icon');
 
-    menuButton.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-        openIcon.classList.toggle('hidden');
-        closeIcon.classList.toggle('hidden');
-    });
+    if (menuButton) {
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            openIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+    }
 
     // --- Report Issue Modal ---
     const reportModal = document.getElementById('report-modal');
     const closeModalBtn = document.getElementById('close-modal-btn');
-    
-    // ### CHANGED: Find ALL buttons/links that open the modal ###
     const openModalBtns = document.querySelectorAll('.open-report-modal');
 
     const openModal = () => reportModal.classList.remove('hidden');
     const closeModal = () => reportModal.classList.add('hidden');
 
-    // Add click event to all open modal buttons/links
     openModalBtns.forEach(btn => {
         btn.addEventListener('click', (event) => {
             event.preventDefault(); // Prevent page jump for <a> links
@@ -32,26 +31,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closeModalBtn.addEventListener('click', closeModal);
     
-    // Close modal if user clicks outside the modal content
     reportModal.addEventListener('click', (event) => {
         if (event.target === reportModal) {
             closeModal();
         }
     });
 
-    // --- Form Submission ---
+    // --- NEW: Geolocation Button ---
+    const getLocationBtn = document.getElementById('get-location-btn');
+    const locationInput = document.getElementById('location');
+
+    getLocationBtn.addEventListener('click', () => {
+        if (navigator.geolocation) {
+            getLocationBtn.textContent = 'Getting location...'; // Provide feedback
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude.toFixed(5);
+                const lon = position.coords.longitude.toFixed(5);
+                locationInput.value = `Lat: ${lat}, Lon: ${lon}`;
+                getLocationBtn.textContent = 'Use my current location';
+            }, () => {
+                alert('Unable to retrieve your location. Please check browser permissions and try again.');
+                getLocationBtn.textContent = 'Use my current location';
+            });
+        } else {
+            alert('Geolocation is not supported by this browser. Please enter your location manually.');
+        }
+    });
+
+
+    // --- UPDATED: Form Submission ---
     const reportForm = document.getElementById('report-form');
 
-    // ### CHANGED: Updated form submission logic ###
     reportForm.addEventListener('submit', (event) => {
-        event.preventDefault(); // Prevent actual form submission
+        event.preventDefault(); 
         
         // 1. Get data from the form
         const category = document.getElementById('issue-category').value;
         const location = document.getElementById('location').value;
         const description = document.getElementById('description').value;
 
-        // Basic validation
         if (!category || !location) {
             alert('Please select a category and provide a location.');
             return;
@@ -65,14 +83,21 @@ document.addEventListener('DOMContentLoaded', () => {
             status: 'Pending' // New issues are always Pending
         };
 
-        // 3. Get existing issues from localStorage or create a new array
-        let issues = JSON.parse(localStorage.getItem('fixYourCityIssues')) || [];
+        // 3. Get existing issues from localStorage or create new arrays
+        //    We will have TWO lists:
+        //    - 'fixYourCityIssues': For ALL public issues (Explore page)
+        //    - 'myFixYourCityReports': For only the user's reports (My Reports page)
+        
+        let allIssues = JSON.parse(localStorage.getItem('fixYourCityIssues')) || [];
+        let myIssues = JSON.parse(localStorage.getItem('myFixYourCityReports')) || [];
 
-        // 4. Add the new issue
-        issues.push(newIssue);
+        // 4. Add the new issue to BOTH lists
+        allIssues.push(newIssue);
+        myIssues.push(newIssue);
 
-        // 5. Save the updated issues array back to localStorage
-        localStorage.setItem('fixYourCityIssues', JSON.stringify(issues));
+        // 5. Save BOTH updated arrays back to localStorage
+        localStorage.setItem('fixYourCityIssues', JSON.stringify(allIssues));
+        localStorage.setItem('myFixYourCityReports', JSON.stringify(myIssues));
         
         // 6. Close the modal
         closeModal();
@@ -80,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 7. Reset the form
         reportForm.reset();
 
-        // 8. Redirect to the issue status page
-        window.location.href = 'issue-status.html';
+        // 8. UPDATED: Redirect to the "My Reports" page
+        window.location.href = 'my-reports.html';
     });
 
 });
