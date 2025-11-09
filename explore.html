@@ -12,6 +12,21 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Styles for active and inactive tabs */
+        .tab-btn.active {
+            border-color: #3B82F6; /* blue-600 */
+            color: #3B82F6;
+            background-color: #EFF6FF; /* blue-50 */
+        }
+        .tab-btn {
+            border-color: transparent;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -32,25 +47,81 @@
     </header>
 
     <main>
-        <section id="issue-status" class="py-16 md:py-24 bg-gray-50">
+        <section id="explore-issues" class="py-16 md:py-24 bg-gray-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">Explore All Issues</h2>
-                <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-100">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue ID</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Category</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                </tbody>
-                        </table>
+
+                <div class="mb-4 border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                        <button class="tab-btn active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="pending">
+                            Pending
+                        </button>
+                        <button class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="progress">
+                            In Progress
+                        </button>
+                        <button class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="resolved">
+                            Resolved
+                        </button>
+                    </nav>
+                </div>
+
+                <div id="pending" class="tab-content active">
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Category</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pending-tbody" class="bg-white divide-y divide-gray-200"></tbody>
+                            </table>
+                            <div id="pending-empty" class="hidden text-center text-gray-600 p-8"><p>No pending issues found.</p></div>
+                        </div>
                     </div>
                 </div>
+                
+                <div id="progress" class="tab-content">
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-100">
+                                     <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Category</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="progress-tbody" class="bg-white divide-y divide-gray-200"></tbody>
+                            </table>
+                            <div id="progress-empty" class="hidden text-center text-gray-600 p-8"><p>No issues are currently in progress.</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="resolved" class="tab-content">
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-100">
+                                     <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Category</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resolved-tbody" class="bg-white divide-y divide-gray-200"></tbody>
+                            </table>
+                             <div id="resolved-empty" class="hidden text-center text-gray-600 p-8"><p>No issues have been resolved yet.</p></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
     </main>
@@ -85,7 +156,7 @@
                 }
             ];
 
-            // Try to get issues from localStorage
+            // ### UPDATED: Read from 'fixYourCityIssues' (the public list) ###
             let issues = JSON.parse(localStorage.getItem('fixYourCityIssues'));
 
             // If localStorage is empty, initialize it with default issues
@@ -93,11 +164,18 @@
                 issues = defaultIssues;
                 localStorage.setItem('fixYourCityIssues', JSON.stringify(defaultIssues));
             }
+            
+            // --- Filter issues into categories ---
+            const pendingIssues = issues.filter(issue => issue.status === 'Pending');
+            const progressIssues = issues.filter(issue => issue.status === 'In Progress');
+            const resolvedIssues = issues.filter(issue => issue.status === 'Resolved');
 
-            const tableBody = document.querySelector('#issue-status table tbody');
-            tableBody.innerHTML = ''; // Clear any existing content
+            // --- Get Table Bodies ---
+            const pendingTbody = document.getElementById('pending-tbody');
+            const progressTbody = document.getElementById('progress-tbody');
+            const resolvedTbody = document.getElementById('resolved-tbody');
 
-            // Helper function to get the correct CSS class for status
+            // --- Helper function to get the correct CSS class for status ---
             function getStatusClass(status) {
                 switch (status) {
                     case 'Resolved':
@@ -109,23 +187,61 @@
                         return 'bg-red-100 text-red-800';
                 }
             }
-
-            // Populate the table with all issues
-            issues.forEach(issue => {
-                const row = document.createElement('tr');
-                const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
+            
+            // --- Helper function to populate a table ---
+            function populateTable(tbody, issueList, emptyMsgId) {
+                tbody.innerHTML = ''; // Clear table
                 
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.location}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="${statusClasses}">
-                            ${issue.status}
-                        </span>
-                    </td>
-                `;
-                tableBody.appendChild(row);
+                if (issueList.length === 0) {
+                    document.getElementById(emptyMsgId).classList.remove('hidden');
+                    return;
+                }
+                
+                issueList.forEach(issue => {
+                    const row = document.createElement('tr');
+                    const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.location}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="${statusClasses}">
+                                ${issue.status}
+                            </span>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // --- Populate all tables ---
+            populateTable(pendingTbody, pendingIssues, 'pending-empty');
+            populateTable(progressTbody, progressIssues, 'progress-empty');
+            populateTable(resolvedTbody, resolvedIssues, 'resolved-empty');
+
+            // --- Tab Switching Logic ---
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deactivate all
+                    tabButtons.forEach(btn => btn.classList.remove('active', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Activate clicked
+                    button.classList.add('active');
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Reset styles for other tabs
+                    tabButtons.forEach(btn => {
+                        if (!btn.classList.contains('active')) {
+                             btn.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                        }
+                    });
+                });
             });
         });
     </script>
