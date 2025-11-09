@@ -50,6 +50,9 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 </tbody>
                         </table>
+                        <div id="no-reports-message" class="hidden text-center text-gray-600 p-8">
+                            <p>You have not reported any issues yet. <a href="index.html" class="text-blue-600 hover:underline">Report one now!</a></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,45 +61,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Default issues to show if localStorage is empty
-            const defaultIssues = [
-                {
-                    id: "#F7C101",
-                    category: "Pothole",
-                    location: "Sector 62, Near Fortis Hospital",
-                    status: "Resolved"
-                },
-                {
-                    id: "#F7C102",
-                    category: "Garbage & Dumping",
-                    location: "Alpha 1, Commercial Belt, Gr. Noida",
-                    status: "In Progress"
-                },
-                {
-                    id: "#F7C103",
-                    category: "Broken Streetlight",
-                    location: "Pari Chowk (Underpass)",
-                    status: "Pending"
-                },
-                {
-                    id: "#F7C104",
-                    category: "Public Nuisance",
-                    location: "Botanical Garden Metro Station",
-                    status: "Resolved"
-                }
-            ];
-
-            // Try to get issues from localStorage
-            let issues = JSON.parse(localStorage.getItem('fixYourCityIssues'));
-
-            // If localStorage is empty, initialize it with default issues
-            if (!issues || issues.length === 0) {
-                issues = defaultIssues;
-                localStorage.setItem('fixYourCityIssues', JSON.stringify(defaultIssues));
-            }
+            
+            // ### UPDATED: Read from 'myFixYourCityReports' ###
+            let issues = JSON.parse(localStorage.getItem('myFixYourCityReports'));
 
             const tableBody = document.querySelector('#issue-status table tbody');
+            const noReportsMessage = document.getElementById('no-reports-message');
             tableBody.innerHTML = ''; // Clear any existing content
+
+            // If my reports list is empty, show the message
+            if (!issues || issues.length === 0) {
+                noReportsMessage.classList.remove('hidden');
+                return; // Stop script
+            }
 
             // Helper function to get the correct CSS class for status
             function getStatusClass(status) {
