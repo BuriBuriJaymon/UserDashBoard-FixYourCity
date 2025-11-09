@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const category = document.getElementById('issue-category').value;
         const location = document.getElementById('location').value;
         const description = document.getElementById('description').value;
+        const currentDate = new Date().toLocaleDateString('en-IN'); // DD/MM/YYYY format
 
         if (!category || !location) {
             alert('Please select a category and provide a location.');
@@ -80,7 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: "#F7C" + Math.floor(105 + Math.random() * 900), // Generate a new ID
             category: category,
             location: location,
-            status: 'Pending' // New issues are always Pending
+            status: 'Pending', // New issues are always Pending
+            date: currentDate // Add the current date
         };
 
         // 3. Get existing issues from localStorage or create new arrays
