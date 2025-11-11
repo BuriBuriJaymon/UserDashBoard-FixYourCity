@@ -76,6 +76,7 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Reported</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Evidence</th>
                                     </tr>
                                 </thead>
                                 <tbody id="pending-tbody" class="bg-white divide-y divide-gray-200"></tbody>
@@ -96,6 +97,7 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Reported</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Evidence</th>
                                     </tr>
                                 </thead>
                                 <tbody id="progress-tbody" class="bg-white divide-y divide-gray-200"></tbody>
@@ -116,6 +118,7 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Reported</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Evidence</th>
                                     </tr>
                                 </thead>
                                 <tbody id="resolved-tbody" class="bg-white divide-y divide-gray-200"></tbody>
@@ -138,28 +141,32 @@
                     category: "Pothole",
                     location: "Sector 62, Near Fortis Hospital",
                     status: "Resolved",
-                    date: "01/11/2025"
+                    date: "01/11/2025",
+                    photoData: null
                 },
                 {
                     id: "#F7C102",
                     category: "Garbage & Dumping",
                     location: "Alpha 1, Commercial Belt, Gr. Noida",
                     status: "In Progress",
-                    date: "05/11/2025"
+                    date: "05/11/2025",
+                    photoData: null
                 },
                 {
                     id: "#F7C103",
                     category: "Broken Streetlight",
                     location: "Pari Chowk (Underpass)",
                     status: "Pending",
-                    date: "08/11/2025"
+                    date: "08/11/2025",
+                    photoData: null
                 },
                 {
                     id: "#F7C104",
                     category: "Public Nuisance",
                     location: "Botanical Garden Metro Station",
                     status: "Resolved",
-                    date: "30/10/2025"
+                    date: "30/10/2025",
+                    photoData: null
                 }
             ];
 
@@ -208,6 +215,13 @@
                     const row = document.createElement('tr');
                     const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
                     
+                    // NEW: Create the evidence link
+                    let evidenceLink = '<span class="text-gray-400">N/A</span>';
+                    if (issue.photoData) {
+                        evidenceLink = `<a href="${issue.photoData}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">View</a>`;
+                    }
+                    
+                    // NEW: Added the evidenceLink cell
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
@@ -217,6 +231,9 @@
                             <span class="${statusClasses}">
                                 ${issue.status}
                             </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            ${evidenceLink}
                         </td>
                     `;
                     tbody.appendChild(row);
