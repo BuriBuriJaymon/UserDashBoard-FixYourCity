@@ -1,68 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - FixYourCity</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FixYourCity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        </header>
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        </header>
 
-    <main>
-        <section id="login-form" class="py-16 md:py-24 bg-gray-50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <div class="max-w-md mx-auto bg-white shadow-lg rounded-lg p-8">
-                    <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">Sign in to your account</h2>
-                    
-                    <form id="login-form-element" class="space-y-6" action="#" method="POST">
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-                            <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="you@example.com">
-                        </div>
+    <main>
+        <section id="login-form" class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="max-w-md mx-auto bg-white shadow-lg rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">Sign in to your account</h2>
+                    
+                    <form id="login-form-element" class="space-y-6" action="#" method="POST">
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                            <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="you@example.com">
+                        </div>
 
-                        <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                            <input type="password" id="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
-                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" id="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
+                        </div>
 
-                        <div class="flex items-center justify-end">
-                            <div class="text-sm">
-                                <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
-                                    Forgot your password?
-                                </a>
-                            </div>
-                        </div>
+                        <div class="flex items-center justify-end">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                                    Forgot your password?
+          _                 </a>
+                            </div>
+                        </div>
 
-                        <div>
-                            <button type="submit" class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">
-                                Sign In
-                            </button>
-                        </div>
-                    </form>
+                        <div>
+                            <button type="submit" class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">
+                                Sign In
+                            </button>
+                        </div>
+                    </form>
 
-                    <p class="text-center text-sm text-gray-600 mt-8">
-                        Don't have an account?
-                        <a href="signup.html" class="font-medium text-blue-600 hover:text-blue-500">
-                            Sign Up
-                        </a>
-                    </p>
-                </div>
+                    <p class="text-center text-sm text-gray-600 mt-8">
+                        Don't have an account?
+                        <a href="signup.html" class="font-medium text-blue-600 hover:text-blue-500">
+                            Sign Up
+                        </a>
+                    </p>
+                </div>
 
-            </div>
-        </section>
-    </main>
+            </div>
+        </section>
+    </main>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
@@ -70,9 +70,13 @@
 <script>
 // PASTE YOUR "Magic Key" (firebaseConfig) HERE
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "fixyourcity.firebaseapp.com",
-  // ...and so on
+  apiKey: "AIzaSyBKMqR9Gq_OzwPXFvKKF7E3xo6LknQ1iu4",
+  authDomain: "fixyourcity-165b4.firebaseapp.com",
+  projectId: "fixyourcity-165b4",
+  storageBucket: "fixyourcity-165b4.firebasestorage.app",
+  messagingSenderId: "803814194323",
+  appId: "1:803814194323:web:b9c44b707ff1bc2696a166",
+  measurementId: "G-SH58RM64ML"
 };
 
 // Connect to your Firebase project
@@ -83,31 +87,31 @@ const auth = firebase.auth();
 </script>
 
 <script>
-    document.getElementById('login-form-element').addEventListener('submit', (event) => {
-        event.preventDefault(); // Stop the form from submitting
-        
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+    document.getElementById('login-form-element').addEventListener('submit', (event) => {
+        event.preventDefault(); // Stop the form from submitting
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-        // Sign in with Firebase Auth
-        auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Signed in 
-                alert('Login successful! Redirecting to homepage...');
-                window.location.href = 'index.html';
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.error(errorCode, errorMessage);
-                
-                if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
-                    alert('Invalid email or password. Please try again.');
-                } else {
-                    alert(`Error: ${errorMessage}`);
-                }
-            });
-    });
+        // Sign in with Firebase Auth
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Signed in 
+                alert('Login successful! Redirecting to homepage...');
+                window.location.href = 'index.html';
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.error(errorCode, errorMessage);
+                
+                if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+a                  alert('Invalid email or password. Please try again.');
+                } else {
+                    alert(`Error: ${errorMessage}`);
+                }
+            });
+    });
 </script>
 </body>
 </html>
