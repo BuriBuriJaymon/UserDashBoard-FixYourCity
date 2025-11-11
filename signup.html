@@ -38,7 +38,7 @@
                 <div class="max-w-md mx-auto bg-white shadow-lg rounded-lg p-8">
                     <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">Create your account</h2>
                     
-                    <form class="space-y-6" action="#" method="POST">
+                    <form id="signup-form-element" class="space-y-6" action="#" method="POST">
                         <div>
                             <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                             <input type="text" id="fullname" name="fullname" required class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Doe">
@@ -51,7 +51,7 @@
 
                         <div>
                             <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                            <input type="password" id="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
+                            <input type="password" id="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="•••••••• (At least 6 characters)">
                         </div>
 
                          <div>
@@ -78,5 +78,74 @@
         </section>
     </main>
 
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
+<script>
+// PASTE YOUR "Magic Key" (firebaseConfig) HERE
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "fixyourcity.firebaseapp.com",
+  // ...and so on
+};
+
+// Connect to your Firebase project
+firebase.initializeApp(firebaseConfig);
+
+// Get a reference to the Auth service
+const auth = firebase.auth();
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const signupForm = document.getElementById('signup-form-element');
+        
+        signupForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Stop the form from submitting
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const fullName = document.getElementById('fullname').value; // Good to have, though not used by auth
+
+            // 1. Check if passwords match
+            if (password !== confirmPassword) {
+                alert("Passwords do not match. Please try again.");
+                return;
+            }
+
+            // 2. Check for full name
+            if (!fullName) {
+                alert("Please enter your full name.");
+                return;
+            }
+
+            // 3. Create user with Firebase Auth
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in!
+                    const user = userCredential.user;
+                    
+                    // Optional: You can update the user's profile with their name
+                    return user.updateProfile({
+                        displayName: fullName
+                    });
+                })
+                .then(() => {
+                    // Profile updated!
+                    alert('Account created successfully! Redirecting to homepage...');
+                    // Redirect to the homepage, they are now logged in
+                    window.location.href = 'index.html'; 
+                })
+                .catch((error) => {
+                    // Handle Errors here.
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error(errorCode, errorMessage);
+                    alert(`Error: ${errorMessage}`);
+                });
+        });
+    });
+</script>
 </body>
 </html>
