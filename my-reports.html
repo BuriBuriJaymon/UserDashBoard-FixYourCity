@@ -46,6 +46,7 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Reported</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Evidence</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
@@ -95,14 +96,21 @@
                 const row = document.createElement('tr');
                 const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
                 
-                // NEW: Determine if the "Reopen" button should be shown
+                // Determine if the "Reopen" button should be shown
                 let actionButton = '';
                 if (issue.status === 'Resolved') {
                     // Add a button with a data-id attribute to identify the issue
                     actionButton = `<button class="reopen-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-id="${issue.id}">Reopen</button>`;
                 }
+
+                // NEW: Create the evidence link
+                let evidenceLink = '<span class="text-gray-400">N/A</span>';
+                if (issue.photoData) {
+                    // Use the Base64 data string as the link's href
+                    evidenceLink = `<a href="${issue.photoData}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">View</a>`;
+                }
                 
-                // NEW: Added the actionButton to the new <td>
+                // NEW: Added the evidenceLink cell
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
@@ -114,13 +122,16 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        ${evidenceLink}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         ${actionButton}
                     </td>
                 `;
                 tableBody.appendChild(row);
             });
 
-            // --- NEW: Event listener for Reopen buttons ---
+            // --- Event listener for Reopen buttons ---
             tableBody.addEventListener('click', (event) => {
                 // Use event delegation to check if a reopen button was clicked
                 if (event.target.classList.contains('reopen-btn')) {
