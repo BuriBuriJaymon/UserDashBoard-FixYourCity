@@ -1,44 +1,7 @@
+// This script now handles all JS for index.html, replacing the old script.js and inline scripts.
+
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- NEW: Auth State Management (UI Toggle) ---
-    const authLinks = document.getElementById('auth-links');
-    const userLinks = document.getElementById('user-links');
-    const logoutBtn = document.getElementById('logout-btn');
-    
-    const mobileAuthLinks = document.getElementById('mobile-auth-links');
-    const mobileUserLinks = document.getElementById('mobile-user-links');
-    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
-
-    const isLoggedIn = localStorage.getItem('fixYourCityUserLoggedIn') === 'true';
-
-    if (isLoggedIn) {
-        // User is logged in: Hide "Login/Sign Up", Show "Logout"
-        if (authLinks) authLinks.style.display = 'none';
-        if (userLinks) userLinks.style.display = 'flex';
-        if (mobileAuthLinks) mobileAuthLinks.style.display = 'none';
-        if (mobileUserLinks) mobileUserLinks.style.display = 'block';
-    } else {
-        // User is logged out: Show "Login/Sign Up", Hide "Logout"
-        if (authLinks) authLinks.style.display = 'flex';
-        if (userLinks) userLinks.style.display = 'none';
-        if (mobileAuthLinks) mobileAuthLinks.style.display = 'block';
-        if (mobileUserLinks) mobileUserLinks.style.display = 'none';
-    }
-
-    // Logout function
-    const handleLogout = (event) => {
-        event.preventDefault();
-        localStorage.setItem('fixYourCityUserLoggedIn', 'false'); // Set flag to false
-        alert('You have been logged out.');
-        window.location.reload(); // Reload page to update UI
-    };
-
-    // Attach logout handlers
-    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-    if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
-    // --- END OF NEW AUTH LOGIC ---
-
-
     // --- Mobile Menu Toggle ---
     const menuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -57,28 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportModal = document.getElementById('report-modal');
     const closeModalBtn = document.getElementById('close-modal-btn');
     const openModalBtns = document.querySelectorAll('.open-report-modal');
+    const reportForm = document.getElementById('report-form');
 
     const openModal = () => reportModal.classList.remove('hidden');
-    const closeModal = () => reportModal.classList.add('hidden');
-
-    openModalBtns.forEach(btn => {
-        btn.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent page jump for <a> links
-            
-            // ### MODIFIED: Check login status ###
-            const currentLoginStatus = localStorage.getItem('fixYourCityUserLoggedIn') === 'true';
-
-            if (currentLoginStatus) {
-                // User is logged in, open the modal
-                openModal();
-            } else {
-                // User is not logged in, alert and redirect to login.html
-                alert('You must be logged in to report an issue.');
-                window.location.href = 'login.html'; 
-            }
-            // ### END OF MODIFICATION ###
-        });
-    });
+    const closeModal = ()_ => {
+        reportModal.classList.add('hidden');
+        if(reportForm) reportForm.reset(); // Reset form when closing
+    };
 
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', closeModal);
@@ -96,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const getLocationBtn = document.getElementById('get-location-btn');
     const locationInput = document.getElementById('location');
 
-    if (getLocationBtn) { // Check if the button exists on this page
+    if (getLocationBtn) { 
         getLocationBtn.addEventListener('click', () => {
             if (navigator.geolocation) {
-                getLocationBtn.textContent = 'Getting location...'; // Provide feedback
+                getLocationBtn.textContent = 'Getting location...'; 
                 navigator.geolocation.getCurrentPosition((position) => {
                     const lat = position.coords.latitude.toFixed(5);
                     const lon = position.coords.longitude.toFixed(5);
@@ -115,84 +63,145 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- NEW: Firebase-aware Auth & UI Management ---
+    // Wait for Firebase services to be attached to window
+    const checkFirebase = setInterval(() => {
+        if (window.firebaseServices) {
+            clearInterval(checkFirebase);
+            initializeAuth();
+        }
+    }, 100);
 
-    // --- Form Submission ---
-    const reportForm = document.getElementById('report-form');
+    function initializeAuth() {
+        const { auth, onAuthStateChanged, signOut } = window.firebaseServices;
 
-    if (reportForm) { // Check if the form exists on this page
-        reportForm.addEventListener('submit', (event) => {
+        const authLinks = document.getElementById('auth-links');
+        const userLinks = document.getElementById('user-links');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        const mobileAuthLinks = document.getElementById('mobile-auth-links');
+        const mobileUserLinks = document.getElementById('mobile-user-links');
+        const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // --- User is LOGGED IN ---
+                if (authLinks) authLinks.style.display = 'none';
+                if (userLinks) userLinks.style.display = 'flex';
+                if (mobileAuthLinks) mobileAuthLinks.style.display = 'none';
+                if (mobileUserLinks) mobileUserLinks.style.display = 'block';
+
+                // Activate "Report an Issue" buttons
+                openModalBtns.forEach(btn => {
+                    btn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        openModal();
+                    });
+                });
+
+            } else {
+                // --- User is LOGGED OUT ---
+                if (authLinks) authLinks.style.display = 'flex';
+                if (userLinks) userLinks.style.display = 'none';
+                if (mobileAuthLinks) mobileAuthLinks.style.display = 'block';
+                if (mobileUserLinks) mobileUserLinks.style.display = 'none';
+
+                // Hijack "Report an Issue" buttons
+                openModalBtns.forEach(btn => {
+                    btn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        alert('You must be logged in to report an issue.');
+                        window.location.href = 'login.html'; 
+                    });
+                });
+            }
+        });
+
+        // --- Logout Logic ---
+        const handleLogout = (event) => {
+            event.preventDefault();
+            signOut(auth).then(() => {
+                alert('You have been logged out.');
+                window.location.href = 'index.html'; // Go to home page
+            }).catch((error) => {
+                console.error("Logout Error: ", error);
+            });
+        };
+
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+        if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
+    }
+
+
+    // --- NEW: Firebase Form Submission ---
+    if (reportForm) {
+        reportForm.addEventListener('submit', async (event) => {
             event.preventDefault(); 
             
-            // 1. Get text data from the form
+            const { auth, db, storage, collection, addDoc, serverTimestamp, ref, uploadBytes, getDownloadURL } = window.firebaseServices;
+            const user = auth.currentUser;
+
+            if (!user) {
+                alert('You must be logged in to submit a report.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const submitButton = document.getElementById('submit-report-btn');
+            const originalButtonText = submitButton.textContent;
+            
+            // 1. Get form data
             const category = document.getElementById('issue-category').value;
             const location = document.getElementById('location').value;
-            const currentDate = new Date().toLocaleDateString('en-IN'); // DD/MM/YYYY format
-            const file = document.getElementById('photo-upload').files[0];
+            const description = document.getElementById('description').value;
+            const photoFile = document.getElementById('photo-upload').files[0];
 
             if (!category || !location) {
                 alert('Please select a category and provide a location.');
                 return;
             }
+            
+            if (!photoFile) {
+                alert('Please add a photo as evidence.');
+                return;
+            }
 
-            // 2. Define the function that saves the data
-            // This will be called *after* the file is read, or immediately if no file
-            const saveIssueAndRedirect = (photoData) => {
-                
-                // 3. Create a new issue object
-                const newIssue = {
-                    id: "#F7C" + Math.floor(105 + Math.random() * 900),
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+
+            try {
+                // 2. Upload Photo to Firebase Storage
+                const photoName = `images/${Date.now()}-${photoFile.name}`;
+                const storageRef = ref(storage, photoName);
+                const uploadTask = await uploadBytes(storageRef, photoFile);
+                const photoURL = await getDownloadURL(uploadTask.ref);
+
+                // 3. Create Report in Firestore
+                const reportData = {
                     category: category,
                     location: location,
+                    description: description,
+                    imageUrl: photoURL,
+                    imagePath: photoName, // Store path for potential deletion
                     status: 'Pending',
-                    date: currentDate,
-                    photoData: photoData // NEW: Add the photo data (will be null if no file)
+                    submittedAt: serverTimestamp(),
+                    userId: user.uid,
+                    userEmail: user.email 
                 };
 
-                // 4. Get existing issues from localStorage or create new arrays
-                let allIssues = JSON.parse(localStorage.getItem('fixYourCityIssues')) || [];
-                let myIssues = JSON.parse(localStorage.getItem('myFixYourCityReports')) || [];
+                await addDoc(collection(db, "issues"), reportData);
 
-                // 5. Add the new issue to BOTH lists
-                allIssues.push(newIssue);
-                myIssues.push(newIssue);
-
-                // 6. Save BOTH updated arrays back to localStorage
-                localStorage.setItem('fixYourCityIssues', JSON.stringify(allIssues));
-                localStorage.setItem('myFixYourCityReports', JSON.stringify(myIssues));
-                
-                // 7. Close the modal
+                // 4. Success
+                alert('Report submitted successfully!');
                 closeModal();
-                
-                // 8. Reset the form
-                reportForm.reset();
+                window.location.href = 'my-reports.html'; // Redirect to My Reports
 
-                // 9. Redirect to the "My Reports" page
-                window.location.href = 'my-reports.html';
-            };
-
-
-            // 3. Check if a file was selected and read it
-            if (file) {
-                const reader = new FileReader();
-                
-                // This event fires when the file reading is complete
-                reader.onload = (e) => {
-                    // e.target.result contains the Base64 string
-                    saveIssueAndRedirect(e.target.result); 
-                };
-
-                reader.onerror = (e) => {
-                    console.error("File reading error: ", e);
-                    alert("There was an error reading your file. Submitting report without image.");
-                    saveIssueAndRedirect(null); // Save without image on error
-                };
-                
-                // Start reading the file
-                reader.readAsDataURL(file);
-
-            } else {
-                // If no file was selected, save the report with null for photoData
-                saveIssueAndRedirect(null);
+            } catch (error) {
+                console.error("Error submitting report: ", error);
+                alert("An error occurred while submitting your report. Please try again.");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
             }
         });
     }
