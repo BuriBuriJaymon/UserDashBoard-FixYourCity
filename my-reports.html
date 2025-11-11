@@ -12,6 +12,58 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+
+        /* --- NEW MODAL STYLES --- */
+        /* Modal background overlay */
+        .image-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
+        }
+        /* Modal content */
+        .image-modal-content {
+            position: relative;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        /* Modal image */
+        .image-modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            display: block;
+        }
+        /* Close button */
+        .image-modal-close {
+            position: absolute;
+            top: -0.75rem;
+            right: -0.75rem;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            line-height: 1.75rem;
+            text-align: center;
+            cursor: pointer;
+            color: #333;
+        }
+        .image-modal-close:hover {
+            background: #f0f0f0;
+        }
+        /* --- END MODAL STYLES --- */
     </style>
 </head>
 <body class="bg-gray-50">
@@ -62,23 +114,32 @@
         </section>
     </main>
 
+    <div id="image-modal" class="image-modal-overlay hidden">
+        <div class="image-modal-content">
+            <button id="modal-close-btn" class="image-modal-close">&times;</button>
+            <img id="modal-image" src="" alt="Reported Issue Evidence" />
+        </div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // ### UPDATED: Read from 'myFixYourCityReports' ###
             let issues = JSON.parse(localStorage.getItem('myFixYourCityReports'));
 
             const tableBody = document.querySelector('#issue-status table tbody');
             const noReportsMessage = document.getElementById('no-reports-message');
+            
+            // --- NEW: Get Modal Elements ---
+            const imageModal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+
             tableBody.innerHTML = ''; // Clear any existing content
 
-            // If my reports list is empty, show the message
             if (!issues || issues.length === 0) {
                 noReportsMessage.classList.remove('hidden');
-                return; // Stop script
+                return; 
             }
 
-            // Helper function to get the correct CSS class for status
             function getStatusClass(status) {
                 switch (status) {
                     case 'Resolved':
@@ -91,26 +152,22 @@
                 }
             }
 
-            // Populate the table with all issues
             issues.forEach(issue => {
                 const row = document.createElement('tr');
                 const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
                 
-                // Determine if the "Reopen" button should be shown
                 let actionButton = '';
                 if (issue.status === 'Resolved') {
-                    // Add a button with a data-id attribute to identify the issue
                     actionButton = `<button class="reopen-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-id="${issue.id}">Reopen</button>`;
                 }
 
-                // NEW: Create the evidence link
+                // --- MODIFIED: Create button with data-src ---
                 let evidenceLink = '<span class="text-gray-400">N/A</span>';
                 if (issue.photoData) {
-                    // Use the Base64 data string as the link's href
-                    evidenceLink = `<a href="${issue.photoData}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">View</a>`;
+                    // This is now a button that will trigger the modal
+                    evidenceLink = `<button class="view-image-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-src="${issue.photoData}">View</button>`;
                 }
                 
-                // NEW: Added the evidenceLink cell
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
@@ -131,38 +188,54 @@
                 tableBody.appendChild(row);
             });
 
-            // --- Event listener for Reopen buttons ---
+            // --- MODIFIED: Event listener now handles "Reopen" AND "View Image" ---
             tableBody.addEventListener('click', (event) => {
-                // Use event delegation to check if a reopen button was clicked
+                
+                // --- Handle "Reopen" button click ---
                 if (event.target.classList.contains('reopen-btn')) {
                     const issueId = event.target.getAttribute('data-id');
                     
                     if (!confirm('Are you sure you want to reopen this issue? It will be marked as Pending.')) {
-                        return; // User clicked cancel
+                        return;
                     }
-
-                    // Get both issue lists from localStorage
                     let myIssues = JSON.parse(localStorage.getItem('myFixYourCityReports')) || [];
                     let allIssues = JSON.parse(localStorage.getItem('fixYourCityIssues')) || [];
 
-                    // Find and update in "My Reports"
                     const myIssueIndex = myIssues.findIndex(issue => issue.id === issueId);
                     if (myIssueIndex !== -1) {
                         myIssues[myIssueIndex].status = 'Pending';
                     }
-
-                    // Find and update in "All Issues" (for the Explore page)
                     const allIssueIndex = allIssues.findIndex(issue => issue.id === issueId);
                     if (allIssueIndex !== -1) {
                         allIssues[allIssueIndex].status = 'Pending';
                     }
-
-                    // Save both updated lists back to localStorage
                     localStorage.setItem('myFixYourCityReports', JSON.stringify(myIssues));
                     localStorage.setItem('fixYourCityIssues', JSON.stringify(allIssues));
-
-                    // Reload the page to show the change
                     location.reload();
+                }
+
+                // --- NEW: Handle "View Image" button click ---
+                if (event.target.classList.contains('view-image-btn')) {
+                    const imageSrc = event.target.getAttribute('data-src');
+                    if (imageSrc) {
+                        modalImage.src = imageSrc;
+                        imageModal.classList.remove('hidden');
+                    }
+                }
+            });
+
+            // --- NEW: Function to close the modal ---
+            const closeModal = () => {
+                imageModal.classList.add('hidden');
+                modalImage.src = ''; // Clear src
+            };
+
+            // Add close listeners
+            modalCloseBtn.addEventListener('click', closeModal);
+            imageModal.addEventListener('click', (event) => {
+                // Close if the click is on the overlay, not the content
+                if (event.target === imageModal) {
+                    closeModal();
                 }
             });
         });
