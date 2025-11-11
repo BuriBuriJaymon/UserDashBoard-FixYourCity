@@ -64,19 +64,50 @@
         </section>
     </main>
 
-    <script>
-        document.getElementById('login-form-element').addEventListener('submit', (event) => {
-            event.preventDefault(); // Stop the form from submitting
-            
-            // In a real app, you would validate email/password here
-            
-            // 1. Set the login flag in localStorage
-            localStorage.setItem('fixYourCityUserLoggedIn', 'true');
-            
-            // 2. Alert and redirect the user back to the homepage
-            alert('Login successful! Redirecting to homepage...');
-            window.location.href = 'index.html';
-        });
-    </script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
+<script>
+// PASTE YOUR "Magic Key" (firebaseConfig) HERE
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "fixyourcity.firebaseapp.com",
+  // ...and so on
+};
+
+// Connect to your Firebase project
+firebase.initializeApp(firebaseConfig);
+
+// Get a reference to the Auth service
+const auth = firebase.auth();
+</script>
+
+<script>
+    document.getElementById('login-form-element').addEventListener('submit', (event) => {
+        event.preventDefault(); // Stop the form from submitting
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Sign in with Firebase Auth
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Signed in 
+                alert('Login successful! Redirecting to homepage...');
+                window.location.href = 'index.html';
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.error(errorCode, errorMessage);
+                
+                if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+                    alert('Invalid email or password. Please try again.');
+                } else {
+                    alert(`Error: ${errorMessage}`);
+                }
+            });
+    });
+</script>
 </body>
 </html>
