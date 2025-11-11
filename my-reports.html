@@ -12,58 +12,26 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-
-        /* --- NEW MODAL STYLES --- */
-        /* Modal background overlay */
         .image-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(0, 0, 0, 0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 100; padding: 1rem;
         }
-        /* Modal content */
         .image-modal-content {
-            position: relative;
-            background: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            max-width: 90vw;
-            max-height: 90vh;
+            position: relative; background: white; padding: 1rem;
+            border-radius: 0.5rem; max-width: 90vw; max-height: 90vh;
         }
-        /* Modal image */
         .image-modal-content img {
-            max-width: 100%;
-            max-height: 85vh;
-            display: block;
+            max-width: 100%; max-height: 85vh; display: block;
         }
-        /* Close button */
         .image-modal-close {
-            position: absolute;
-            top: -0.75rem;
-            right: -0.75rem;
-            background: white;
-            border: 2px solid #333;
-            border-radius: 50%;
-            width: 2rem;
-            height: 2rem;
-            font-size: 1.25rem;
-            font-weight: bold;
-            line-height: 1.75rem;
-            text-align: center;
-            cursor: pointer;
-            color: #333;
+            position: absolute; top: -0.75rem; right: -0.75rem;
+            background: white; border: 2px solid #333; border-radius: 50%;
+            width: 2rem; height: 2rem; font-size: 1.25rem; font-weight: bold;
+            line-height: 1.75rem; text-align: center; cursor: pointer; color: #333;
         }
-        .image-modal-close:hover {
-            background: #f0f0f0;
-        }
-        /* --- END MODAL STYLES --- */
+        .image-modal-close:hover { background: #f0f0f0; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -72,7 +40,7 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center">
-                    <span class="font-bold text-2xl text-gray-800">FixYourCity</span>
+                    <a href="index.html" class="font-bold text-2xl text-gray-800">FixYourCity</a>
                 </div>
                 <div>
                     <a href="index.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">
@@ -87,26 +55,32 @@
         <section id="issue-status" class="py-16 md:py-24 bg-gray-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">My Reports</h2>
-                <p class="text-center text-gray-600 mb-12 -mt-4 max-w-lg mx-auto">Here is a list of all the issues you have submitted. You can track their status below.</p>
+                <p class="text-center text-gray-600 mb-12 -mt-4 max-w-lg mx-auto">Here is a list of all the issues you have submitted. Their status is updated live.</p>
                 <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-100">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Category</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Reported</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Evidence</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                </tbody>
+                            <tbody id="reports-tbody" class="bg-white divide-y divide-gray-200">
+                                <!-- Rows will be injected here by JavaScript -->
+                            </tbody>
                         </table>
+                        <div id="loading-message" class="text-center text-gray-600 p-8">
+                            <p>Loading your reports...</p>
+                        </div>
                         <div id="no-reports-message" class="hidden text-center text-gray-600 p-8">
                             <p>You have not reported any issues yet. <a href="index.html" class="text-blue-600 hover:underline">Report one now!</a></p>
+                        </div>
+                        <div id="login-message" class="hidden text-center text-gray-600 p-8">
+                            <p>You must be logged in to see your reports. <a href="login.html" class="text-blue-600 hover:underline">Please log in.</a></p>
                         </div>
                     </div>
                 </div>
@@ -114,131 +88,178 @@
         </section>
     </main>
 
+    <!-- Image Modal -->
     <div id="image-modal" class="image-modal-overlay hidden">
         <div class="image-modal-content">
             <button id="modal-close-btn" class="image-modal-close">&times;</button>
             <img id="modal-image" src="" alt="Reported Issue Evidence" />
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            let issues = JSON.parse(localStorage.getItem('myFixYourCityReports'));
+    
+    <!-- UPDATED FIREBASE SDKs (v9+ Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-            const tableBody = document.querySelector('#issue-status table tbody');
-            const noReportsMessage = document.getElementById('no-reports-message');
-            
-            // --- NEW: Get Modal Elements ---
-            const imageModal = document.getElementById('image-modal');
-            const modalImage = document.getElementById('modal-image');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
+        const firebaseConfig = {
+          apiKey: "AIzaSyBKMqR9Gq_OzwPXFvKKF7E3xo6LknQ1iu4",
+          authDomain: "fixyourcity-165b4.firebaseapp.com",
+          projectId: "fixyourcity-165b4",
+          storageBucket: "fixyourcity-165b4.firebasestorage.app",
+          messagingSenderId: "803814194323",
+          appId: "1:803814194323:web:b9c44b707ff1bc2696a166",
+          measurementId: "G-SH58RM64ML"
+        };
 
-            tableBody.innerHTML = ''; // Clear any existing content
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            if (!issues || issues.length === 0) {
-                noReportsMessage.classList.remove('hidden');
-                return; 
+        // --- Modal Elements & Functions ---
+        const imageModal = document.getElementById('image-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        const openModal = (imageUrl) => {
+            modalImage.src = imageUrl;
+            imageModal.classList.remove('hidden');
+        };
+        
+        const closeModal = () => {
+            imageModal.classList.add('hidden');
+            modalImage.src = ''; 
+        };
+
+        modalCloseBtn.addEventListener('click', closeModal);
+        imageModal.addEventListener('click', (event) => {
+            if (event.target === imageModal) closeModal();
+        });
+        
+        // --- Status Styling Function ---
+        function getStatusClass(status) {
+            switch (status) {
+                case 'Resolved': return 'bg-green-100 text-green-800';
+                case 'In Progress': return 'bg-yellow-100 text-yellow-800';
+                case 'Pending': default: return 'bg-red-100 text-red-800';
             }
+        }
+        
+        // --- UI Elements ---
+        const tableBody = document.getElementById('reports-tbody');
+        const loadingMessage = document.getElementById('loading-message');
+        const noReportsMessage = document.getElementById('no-reports-message');
+        const loginMessage = document.getElementById('login-message');
+        let unsubscribe = null; // To stop listener on logout
 
-            function getStatusClass(status) {
-                switch (status) {
-                    case 'Resolved':
-                        return 'bg-green-100 text-green-800';
-                    case 'In Progress':
-                        return 'bg-yellow-100 text-yellow-800';
-                    case 'Pending':
-                    default:
-                        return 'bg-red-100 text-red-800';
-                }
-            }
-
-            issues.forEach(issue => {
-                const row = document.createElement('tr');
-                const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
+        // --- Auth & Firestore Logic ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is logged in
+                loginMessage.classList.add('hidden');
+                loadingMessage.classList.remove('hidden');
                 
-                let actionButton = '';
-                if (issue.status === 'Resolved') {
-                    actionButton = `<button class="reopen-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-id="${issue.id}">Reopen</button>`;
-                }
+                // If there's an old listener, stop it
+                if (unsubscribe) unsubscribe();
 
-                // --- MODIFIED: Create button with data-src ---
-                let evidenceLink = '<span class="text-gray-400">N/A</span>';
-                if (issue.photoData) {
-                    // This is now a button that will trigger the modal
-                    evidenceLink = `<button class="view-image-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-src="${issue.photoData}">View</button>`;
-                }
-                
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.location}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.date || 'N/A'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="${statusClasses}">
-                            ${issue.status}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        ${evidenceLink}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        ${actionButton}
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
+                // Create a query to get only this user's issues
+                const issuesRef = collection(db, "issues");
+                const q = query(issuesRef, where("userId", "==", user.uid));
 
-            // --- MODIFIED: Event listener now handles "Reopen" AND "View Image" ---
-            tableBody.addEventListener('click', (event) => {
-                
-                // --- Handle "Reopen" button click ---
-                if (event.target.classList.contains('reopen-btn')) {
-                    const issueId = event.target.getAttribute('data-id');
-                    
-                    if (!confirm('Are you sure you want to reopen this issue? It will be marked as Pending.')) {
+                // Use onSnapshot for real-time updates
+                unsubscribe = onSnapshot(q, (querySnapshot) => {
+                    loadingMessage.classList.add('hidden');
+                    tableBody.innerHTML = ''; // Clear table
+
+                    if (querySnapshot.empty) {
+                        noReportsMessage.classList.remove('hidden');
                         return;
                     }
-                    let myIssues = JSON.parse(localStorage.getItem('myFixYourCityReports')) || [];
-                    let allIssues = JSON.parse(localStorage.getItem('fixYourCityIssues')) || [];
+                    
+                    noReportsMessage.classList.add('hidden');
+                    
+                    querySnapshot.forEach((doc) => {
+                        const issue = doc.data();
+                        const issueId = doc.id;
+                        
+                        const row = document.createElement('tr');
+                        const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
+                        
+                        let actionButton = '';
+                        if (issue.status === 'Resolved') {
+                            actionButton = `<button class="reopen-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-id="${issueId}">Reopen</button>`;
+                        }
 
-                    const myIssueIndex = myIssues.findIndex(issue => issue.id === issueId);
-                    if (myIssueIndex !== -1) {
-                        myIssues[myIssueIndex].status = 'Pending';
-                    }
-                    const allIssueIndex = allIssues.findIndex(issue => issue.id === issueId);
-                    if (allIssueIndex !== -1) {
-                        allIssues[allIssueIndex].status = 'Pending';
-                    }
-                    localStorage.setItem('myFixYourCityReports', JSON.stringify(myIssues));
-                    localStorage.setItem('fixYourCityIssues', JSON.stringify(allIssues));
-                    location.reload();
-                }
+                        let evidenceButton = `<button class="view-image-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-src="${issue.imageUrl}">View</button>`;
+                        
+                        const submittedDate = issue.submittedAt ? issue.submittedAt.toDate().toLocaleDateString('en-IN') : 'N/A';
+                        
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${submittedDate}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.location}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="${statusClasses}">
+                                    ${issue.status}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                ${evidenceButton}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                ${actionButton}
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
 
-                // --- NEW: Handle "View Image" button click ---
-                if (event.target.classList.contains('view-image-btn')) {
-                    const imageSrc = event.target.getAttribute('data-src');
-                    if (imageSrc) {
-                        modalImage.src = imageSrc;
-                        imageModal.classList.remove('hidden');
-                    }
-                }
-            });
+                }, (error) => {
+                    console.error("Error getting reports: ", error);
+                    alert("Could not fetch reports. Please try again.");
+                    loadingMessage.classList.add('hidden');
+                });
 
-            // --- NEW: Function to close the modal ---
-            const closeModal = () => {
-                imageModal.classList.add('hidden');
-                modalImage.src = ''; // Clear src
-            };
-
-            // Add close listeners
-            modalCloseBtn.addEventListener('click', closeModal);
-            imageModal.addEventListener('click', (event) => {
-                // Close if the click is on the overlay, not the content
-                if (event.target === imageModal) {
-                    closeModal();
-                }
-            });
+            } else {
+                // User is logged out
+                if (unsubscribe) unsubscribe(); // Stop any active listener
+                tableBody.innerHTML = '';
+                loadingMessage.classList.add('hidden');
+                noReportsMessage.classList.add('hidden');
+                loginMessage.classList.remove('hidden');
+                // Optional: Redirect to login
+                // window.location.href = 'login.html';
+            }
         });
+        
+        // --- Table Click Handler (Event Delegation) ---
+        tableBody.addEventListener('click', async (event) => {
+            // Handle "View Image" button
+            if (event.target.classList.contains('view-image-btn')) {
+                const imageUrl = event.target.getAttribute('data-src');
+                if (imageUrl) openModal(imageUrl);
+            }
+
+            // Handle "Reopen" button
+            if (event.target.classList.contains('reopen-btn')) {
+                const issueId = event.target.getAttribute('data-id');
+                
+                if (!confirm('Are you sure you want to reopen this issue? It will be marked as Pending.')) {
+                    return;
+                }
+                
+                try {
+                    const issueRef = doc(db, "issues", issueId);
+                    await updateDoc(issueRef, {
+                        status: "Pending"
+                    });
+                    // No reload needed! onSnapshot will update the UI automatically.
+                } catch (error) {
+                    console.error("Error reopening issue: ", error);
+                    alert("Could not reopen issue. Please try again.");
+                }
+            }
+        });
+        
     </script>
 </body>
 </html>
