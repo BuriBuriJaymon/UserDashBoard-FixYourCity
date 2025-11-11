@@ -12,7 +12,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Styles for active and inactive tabs */
         .tab-btn.active {
             border-color: #3B82F6; /* blue-600 */
             color: #3B82F6;
@@ -27,6 +26,54 @@
         .tab-content.active {
             display: block;
         }
+
+        /* --- NEW MODAL STYLES --- */
+        .image-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
+        }
+        .image-modal-content {
+            position: relative;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .image-modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            display: block;
+        }
+        .image-modal-close {
+            position: absolute;
+            top: -0.75rem;
+            right: -0.75rem;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            line-height: 1.75rem;
+            text-align: center;
+            cursor: pointer;
+            color: #333;
+        }
+        .image-modal-close:hover {
+            background: #f0f0f0;
+        }
+        /* --- END MODAL STYLES --- */
     </style>
 </head>
 <body class="bg-gray-50">
@@ -132,79 +179,51 @@
         </section>
     </main>
 
+    <div id="image-modal" class="image-modal-overlay hidden">
+        <div class="image-modal-content">
+            <button id="modal-close-btn" class="image-modal-close">&times;</button>
+            <img id="modal-image" src="" alt="Reported Issue Evidence" />
+        </div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Default issues to show if localStorage is empty
+            
+            // --- NEW: Get Modal Elements ---
+            const imageModal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+
             const defaultIssues = [
-                {
-                    id: "#F7C101",
-                    category: "Pothole",
-                    location: "Sector 62, Near Fortis Hospital",
-                    status: "Resolved",
-                    date: "01/11/2025",
-                    photoData: null
-                },
-                {
-                    id: "#F7C102",
-                    category: "Garbage & Dumping",
-                    location: "Alpha 1, Commercial Belt, Gr. Noida",
-                    status: "In Progress",
-                    date: "05/11/2025",
-                    photoData: null
-                },
-                {
-                    id: "#F7C103",
-                    category: "Broken Streetlight",
-                    location: "Pari Chowk (Underpass)",
-                    status: "Pending",
-                    date: "08/11/2025",
-                    photoData: null
-                },
-                {
-                    id: "#F7C104",
-                    category: "Public Nuisance",
-                    location: "Botanical Garden Metro Station",
-                    status: "Resolved",
-                    date: "30/10/2025",
-                    photoData: null
-                }
+                { id: "#F7C101", category: "Pothole", location: "Sector 62, Near Fortis Hospital", status: "Resolved", date: "01/11/2025", photoData: null },
+                { id: "#F7C102", category: "Garbage & Dumping", location: "Alpha 1, Commercial Belt, Gr. Noida", status: "In Progress", date: "05/11/2025", photoData: null },
+                { id: "#F7C103", category: "Broken Streetlight", location: "Pari Chowk (Underpass)", status: "Pending", date: "08/11/2025", photoData: null },
+                { id: "#F7C104", category: "Public Nuisance", location: "Botanical Garden Metro Station", status: "Resolved", date: "30/10/2025", photoData: null }
             ];
 
-            // ### UPDATED: Read from 'fixYourCityIssues' (the public list) ###
             let issues = JSON.parse(localStorage.getItem('fixYourCityIssues'));
-
-            // If localStorage is empty, initialize it with default issues
             if (!issues || issues.length === 0) {
                 issues = defaultIssues;
                 localStorage.setItem('fixYourCityIssues', JSON.stringify(defaultIssues));
             }
             
-            // --- Filter issues into categories ---
             const pendingIssues = issues.filter(issue => issue.status === 'Pending');
             const progressIssues = issues.filter(issue => issue.status === 'In Progress');
             const resolvedIssues = issues.filter(issue => issue.status === 'Resolved');
 
-            // --- Get Table Bodies ---
             const pendingTbody = document.getElementById('pending-tbody');
             const progressTbody = document.getElementById('progress-tbody');
             const resolvedTbody = document.getElementById('resolved-tbody');
 
-            // --- Helper function to get the correct CSS class for status ---
             function getStatusClass(status) {
                 switch (status) {
-                    case 'Resolved':
-                        return 'bg-green-100 text-green-800';
-                    case 'In Progress':
-                        return 'bg-yellow-100 text-yellow-800';
-                    case 'Pending':
-                    default:
-                        return 'bg-red-100 text-red-800';
+                    case 'Resolved': return 'bg-green-100 text-green-800';
+                    case 'In Progress': return 'bg-yellow-100 text-yellow-800';
+                    case 'Pending': default: return 'bg-red-100 text-red-800';
                 }
             }
             
-            // --- Helper function to populate a table ---
             function populateTable(tbody, issueList, emptyMsgId) {
-                tbody.innerHTML = ''; // Clear table
+                tbody.innerHTML = ''; 
                 
                 if (issueList.length === 0) {
                     document.getElementById(emptyMsgId).classList.remove('hidden');
@@ -215,13 +234,12 @@
                     const row = document.createElement('tr');
                     const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
                     
-                    // NEW: Create the evidence link
+                    // --- MODIFIED: Create button with data-src ---
                     let evidenceLink = '<span class="text-gray-400">N/A</span>';
                     if (issue.photoData) {
-                        evidenceLink = `<a href="${issue.photoData}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">View</a>`;
+                        evidenceLink = `<button class="view-image-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-src="${issue.photoData}">View</button>`;
                     }
                     
-                    // NEW: Added the evidenceLink cell
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
@@ -240,7 +258,6 @@
                 });
             }
 
-            // --- Populate all tables ---
             populateTable(pendingTbody, pendingIssues, 'pending-empty');
             populateTable(progressTbody, progressIssues, 'progress-empty');
             populateTable(resolvedTbody, resolvedIssues, 'resolved-empty');
@@ -251,22 +268,44 @@
 
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    // Deactivate all
                     tabButtons.forEach(btn => btn.classList.remove('active', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
                     tabContents.forEach(content => content.classList.remove('active'));
-
-                    // Activate clicked
                     button.classList.add('active');
                     const tabId = button.getAttribute('data-tab');
                     document.getElementById(tabId).classList.add('active');
-                    
-                    // Reset styles for other tabs
                     tabButtons.forEach(btn => {
                         if (!btn.classList.contains('active')) {
                              btn.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
                         }
                     });
                 });
+            });
+
+            // --- NEW: Event listener for image clicks ---
+            // We listen on the whole section to catch clicks from all 3 tables
+            const exploreSection = document.getElementById('explore-issues');
+            exploreSection.addEventListener('click', (event) => {
+                if (event.target.classList.contains('view-image-btn')) {
+                    const imageSrc = event.target.getAttribute('data-src');
+                    if (imageSrc) {
+                        modalImage.src = imageSrc;
+                        imageModal.classList.remove('hidden');
+                    }
+                }
+            });
+
+            // --- NEW: Function to close the modal ---
+            const closeModal = () => {
+                imageModal.classList.add('hidden');
+                modalImage.src = ''; // Clear src
+            };
+
+            // Add close listeners
+            modalCloseBtn.addEventListener('click', closeModal);
+            imageModal.addEventListener('click', (event) => {
+                if (event.target === imageModal) {
+                    closeModal();
+                }
             });
         });
     </script>
