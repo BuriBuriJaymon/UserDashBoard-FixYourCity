@@ -23,7 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const reportForm = document.getElementById('report-form');
 
     const openModal = () => reportModal.classList.remove('hidden');
-    const closeModal = ()_ => {
+    
+    // --- THIS IS THE CORRECTED LINE ---
+    const closeModal = () => {
         reportModal.classList.add('hidden');
         if(reportForm) reportForm.reset(); // Reset form when closing
     };
