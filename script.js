@@ -135,12 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- NEW: Firebase Form Submission ---
+    // --- *** UPDATED: Firebase Form Submission with Compression & Progress *** ---
     if (reportForm) {
         reportForm.addEventListener('submit', async (event) => {
             event.preventDefault(); 
             
-            const { auth, db, storage, collection, addDoc, serverTimestamp, ref, uploadBytes, getDownloadURL } = window.firebaseServices;
+            // Get new functions from window
+            const { auth, db, storage, collection, addDoc, serverTimestamp, ref, getDownloadURL, uploadBytesResumable, onSnapshot } = window.firebaseServices;
             const user = auth.currentUser;
 
             if (!user) {
@@ -169,39 +170,91 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
+            submitButton.textContent = 'Compressing image...';
 
+            // --- NEW COMPRESSION STEP ---
+            const options = {
+              maxSizeMB: 1,         // Max file size 1MB
+              maxWidthOrHeight: 1920, // Resize to max 1920px
+              useWebWorker: true
+            }
+
+            let compressedFile;
             try {
-                // 2. Upload Photo to Firebase Storage
-                const photoName = `images/${Date.now()}-${photoFile.name}`;
+              compressedFile = await imageCompression(photoFile, options);
+            } catch (compressionError) {
+              console.error("Image compression error: ", compressionError);
+              alert("Could not compress image. Please try a smaller file.");
+              submitButton.disabled = false;
+              submitButton.textContent = originalButtonText;
+              return; // Stop submission
+            }
+            // --- END COMPRESSION STEP ---
+
+
+            // --- NEW UPLOAD LOGIC with Progress ---
+            try {
+                // Upload the NEW compressedFile
+                const photoName = `images/${Date.now()}-${compressedFile.name}`;
                 const storageRef = ref(storage, photoName);
-                const uploadTask = await uploadBytes(storageRef, photoFile);
-                const photoURL = await getDownloadURL(uploadTask.ref);
 
-                // 3. Create Report in Firestore
-                const reportData = {
-                    category: category,
-                    location: location,
-                    description: description,
-                    imageUrl: photoURL,
-                    imagePath: photoName, // Store path for potential deletion
-                    status: 'Pending',
-                    submittedAt: serverTimestamp(),
-                    userId: user.uid,
-                    userEmail: user.email 
-                };
+                // *** Use uploadBytesResumable ***
+                const uploadTask = uploadBytesResumable(storageRef, compressedFile);
 
-                await addDoc(collection(db, "issues"), reportData);
+                // Listen for state changes, errors, and completion
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        // Get task progress
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        submitButton.textContent = `Uploading... ${Math.round(progress)}%`;
+                    }, 
+                    (error) => {
+                        // Handle unsuccessful uploads
+                        console.error("Upload error: ", error);
+                        alert("Photo upload failed. Please try again.");
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalButtonText;
+                    }, 
+                    async () => {
+                        // Handle successful uploads on complete
+                        submitButton.textContent = 'Saving report...';
+                        
+                        try {
+                            // 3. Get URL and Create Report in Firestore
+                            const photoURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-                // 4. Success
-                alert('Report submitted successfully!');
-                closeModal();
-                window.location.href = 'my-reports.html'; // Redirect to My Reports
+                            const reportData = {
+                                category: category,
+                                location: location,
+                                description: description,
+                                imageUrl: photoURL,
+                                imagePath: photoName, // Store path for potential deletion
+                                status: 'Pending',
+                                submittedAt: serverTimestamp(),
+                                userId: user.uid,
+                                userEmail: user.email 
+                            };
+
+                            await addDoc(collection(db, "issues"), reportData);
+
+                            // 4. Success
+                            alert('Report submitted successfully!');
+                            closeModal();
+                            window.location.href = 'my-reports.html'; // Redirect to My Reports
+                        
+                        } catch (saveError) {
+                            console.error("Error saving report to Firestore: ", saveError);
+                            alert("Photo uploaded, but saving the report failed. Please try again.");
+                            submitButton.disabled = false;
+                            submitButton.textContent = originalButtonText;
+                        }
+                    }
+                );
 
             } catch (error) {
-                console.error("Error submitting report: ", error);
-                alert("An error occurred while submitting your report. Please try again.");
-            } finally {
+                // This catches errors *before* the upload starts
+                console.error("Error setting up upload: ", error);
+                alert("An error occurred. Please try again.");
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
             }
