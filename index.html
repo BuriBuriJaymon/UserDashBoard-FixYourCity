@@ -6,7 +6,6 @@
     <title>Fix YourCity - Delhi & Greater Noida</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Heroicons for icons -->
     <script type="module" src="https://unpkg.com/heroicons@2.1.3/dist/solid.js"></script>
     <script type="module" src="https://unpkg.com/heroicons@2.1.3/dist/outline.js"></script>
     
@@ -18,16 +17,13 @@
 </head>
 <body class="bg-gray-50">
 
-    <!-- Header -->
     <header class="bg-white shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
                     <a href="index.html" class="font-bold text-2xl text-gray-800">FixYourCity</a>
                 </div>
                 
-                <!-- Desktop Nav -->
                 <div class="hidden md:flex md:items-center md:space-x-8">
                     <a href="#" class="text-gray-600 hover:text-blue-600 font-medium open-report-modal">Report an Issue</a>
                     <a href="my-reports.html" class="text-gray-600 hover:text-blue-600 font-medium">My Reports</a>
@@ -36,7 +32,6 @@
                     <a href="#how-it-works" class="text-gray-600 hover:text-blue-600 font-medium">How It Works</a>
                 </div>
                 
-                <!-- Desktop Auth -->
                 <div class="hidden md:flex items-center space-x-4">
                     <div id="auth-links" class="flex items-center space-x-4">
                         <a href="login.html" class="text-gray-600 hover:text-blue-600 font-medium">Login</a>
@@ -47,7 +42,6 @@
                     </div>
                 </div>
                 
-                <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center">
                     <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
                         <span class="sr-only">Open main menu</span>
@@ -62,7 +56,6 @@
             </div>
         </nav>
 
-        <!-- Mobile Menu -->
         <div class="md:hidden hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#" class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium open-report-modal">Report an Issue</a>
@@ -83,7 +76,6 @@
     </header>
 
     <main>
-        <!-- Hero Section -->
         <section class="hero-bg text-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
                 <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4">Empowering Citizens.</h1>
@@ -95,12 +87,10 @@
             </div>
         </section>
 
-        <!-- How It Works Section -->
         <section id="how-it-works" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">How It Works</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <!-- Step 1 -->
                     <div class="flex flex-col items-center">
                         <div class="flex items-center justify-center bg-blue-100 rounded-full h-16 w-16 mb-4">
                             <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -110,7 +100,6 @@
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">1. Report an Issue</h3>
                         <p class="text-gray-600">See a pothole, broken streetlight, or garbage dump? Snap a photo and submit a report in seconds.</p>
                     </div>
-                    <!-- Step 2 -->
                     <div class="flex flex-col items-center">
                         <div class="flex items-center justify-center bg-blue-100 rounded-full h-16 w-16 mb-4">
                             <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -120,7 +109,6 @@
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">2. We Notify Authorities</h3>
                         <p class="text-gray-600">Your report is automatically categorized and forwarded to the relevant municipal department.</p>
                     </div>
-                    <!-- Step 3 -->
                     <div class="flex flex-col items-center">
                         <div class="flex items-center justify-center bg-blue-100 rounded-full h-16 w-16 mb-4">
                             <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -135,7 +123,6 @@
             </div>
         </section>
 
-        <!-- Explore CTA -->
         <section id="explore" class="py-16 md:py-24 bg-gray-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">See What's Happening</h2>
@@ -146,7 +133,6 @@
             </div>
         </section>
         
-        <!-- Performance CTA -->
         <section class="bg-blue-600">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 text-center">
                 <h2 class="text-3xl font-bold text-white mb-4">Demand Accountability</h2>
@@ -158,7 +144,6 @@
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-gray-300">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
             <p>&copy; 2025 FixYourCity. All rights reserved.</p>
@@ -166,7 +151,6 @@
         </div>
     </footer>
     
-    <!-- Report Issue Modal -->
     <div id="report-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full flex items-center justify-center z-50 hidden">
         <div class="relative mx-auto p-5 border w-full max-w-lg shadow-lg rounded-xl bg-white">
             <div class="flex justify-between items-center mb-4">
@@ -177,7 +161,6 @@
                     </svg>
                 </button>
             </div>
-            <!-- Form -->
             <form id="report-form" class="space-y-4">
                 <div>
                     <label for="issue-category" class="block text-sm font-medium text-gray-700 mb-1">Issue Category</label>
@@ -220,24 +203,21 @@
                     </button>
                 </div>
             </form>
-            <!-- End Form -->
-        </div>
+            </div>
     </div>
     
-    <!-- Firebase
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    -->
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
     
-    <!-- UPDATED FIREBASE SDKs (v9+ Modular) -->
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
+        
+        // *** UPDATED FIRESTORE IMPORT (added onSnapshot) ***
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+        
+        // *** UPDATED STORAGE IMPORT (changed to uploadBytesResumable) ***
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
         
         // PASTE YOUR "Magic Key" (firebaseConfig) HERE
         const firebaseConfig = {
@@ -258,8 +238,8 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
         
+        // *** UPDATED window.firebaseServices ***
         // Make services globally accessible to script.js
-        // This is a simple way to share them without more complex modules
         window.firebaseServices = {
             app,
             auth,
@@ -271,13 +251,14 @@
             addDoc,
             serverTimestamp,
             ref,
-            uploadBytes,
-            getDownloadURL
+            uploadBytesResumable, // <-- ADDED
+            getDownloadURL,
+            onSnapshot // <-- ADDED
+            // uploadBytes was removed
         };
 
     </script>
     
-    <!-- Your consolidated and corrected script -->
     <script src="script.js" defer></script>
 </body>
 </html>
