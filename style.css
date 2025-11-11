@@ -4,7 +4,8 @@ body {
 }
 
 .hero-bg {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://placehold.co/1600x900/444/666?text=Delhi/Noida+Cityscape');
+    /* Updated to use a real image from Unsplash */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://source.unsplash.com/1600x900/?city,delhi,noida');
     background-size: cover;
     background-position: center;
 }
