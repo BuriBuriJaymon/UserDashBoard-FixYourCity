@@ -123,46 +123,77 @@ document.addEventListener('DOMContentLoaded', () => {
         reportForm.addEventListener('submit', (event) => {
             event.preventDefault(); 
             
-            // 1. Get data from the form
+            // 1. Get text data from the form
             const category = document.getElementById('issue-category').value;
             const location = document.getElementById('location').value;
-            const description = document.getElementById('description').value;
             const currentDate = new Date().toLocaleDateString('en-IN'); // DD/MM/YYYY format
+            const file = document.getElementById('photo-upload').files[0];
 
             if (!category || !location) {
                 alert('Please select a category and provide a location.');
                 return;
             }
 
-            // 2. Create a new issue object
-            const newIssue = {
-                id: "#F7C" + Math.floor(105 + Math.random() * 900), // Generate a new ID
-                category: category,
-                location: location,
-                status: 'Pending', // New issues are always Pending
-                date: currentDate // Add the current date
+            // 2. Define the function that saves the data
+            // This will be called *after* the file is read, or immediately if no file
+            const saveIssueAndRedirect = (photoData) => {
+                
+                // 3. Create a new issue object
+                const newIssue = {
+                    id: "#F7C" + Math.floor(105 + Math.random() * 900),
+                    category: category,
+                    location: location,
+                    status: 'Pending',
+                    date: currentDate,
+                    photoData: photoData // NEW: Add the photo data (will be null if no file)
+                };
+
+                // 4. Get existing issues from localStorage or create new arrays
+                let allIssues = JSON.parse(localStorage.getItem('fixYourCityIssues')) || [];
+                let myIssues = JSON.parse(localStorage.getItem('myFixYourCityReports')) || [];
+
+                // 5. Add the new issue to BOTH lists
+                allIssues.push(newIssue);
+                myIssues.push(newIssue);
+
+                // 6. Save BOTH updated arrays back to localStorage
+                localStorage.setItem('fixYourCityIssues', JSON.stringify(allIssues));
+                localStorage.setItem('myFixYourCityReports', JSON.stringify(myIssues));
+                
+                // 7. Close the modal
+                closeModal();
+                
+                // 8. Reset the form
+                reportForm.reset();
+
+                // 9. Redirect to the "My Reports" page
+                window.location.href = 'my-reports.html';
             };
 
-            // 3. Get existing issues from localStorage or create new arrays
-            let allIssues = JSON.parse(localStorage.getItem('fixYourCityIssues')) || [];
-            let myIssues = JSON.parse(localStorage.getItem('myFixYourCityReports')) || [];
 
-            // 4. Add the new issue to BOTH lists
-            allIssues.push(newIssue);
-            myIssues.push(newIssue);
+            // 3. Check if a file was selected and read it
+            if (file) {
+                const reader = new FileReader();
+                
+                // This event fires when the file reading is complete
+                reader.onload = (e) => {
+                    // e.target.result contains the Base64 string
+                    saveIssueAndRedirect(e.target.result); 
+                };
 
-            // 5. Save BOTH updated arrays back to localStorage
-            localStorage.setItem('fixYourCityIssues', JSON.stringify(allIssues));
-            localStorage.setItem('myFixYourCityReports', JSON.stringify(myIssues));
-            
-            // 6. Close the modal
-            closeModal();
-            
-            // 7. Reset the form
-            reportForm.reset();
+                reader.onerror = (e) => {
+                    console.error("File reading error: ", e);
+                    alert("There was an error reading your file. Submitting report without image.");
+                    saveIssueAndRedirect(null); // Save without image on error
+                };
+                
+                // Start reading the file
+                reader.readAsDataURL(file);
 
-            // 8. Redirect to the "My Reports" page
-            window.location.href = 'my-reports.html';
+            } else {
+                // If no file was selected, save the report with null for photoData
+                saveIssueAndRedirect(null);
+            }
         });
     }
 });
