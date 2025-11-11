@@ -9,71 +9,33 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+        body { font-family: 'Inter', sans-serif; }
         .tab-btn.active {
-            border-color: #3B82F6; /* blue-600 */
-            color: #3B82F6;
-            background-color: #EFF6FF; /* blue-50 */
+            border-color: #3B82F6; color: #3B82F6; background-color: #EFF6FF;
         }
-        .tab-btn {
-            border-color: transparent;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-        /* --- NEW MODAL STYLES --- */
+        .tab-btn { border-color: transparent; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .image-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(0, 0, 0, 0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 100; padding: 1rem;
         }
         .image-modal-content {
-            position: relative;
-            background: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            max-width: 90vw;
-            max-height: 90vh;
+            position: relative; background: white; padding: 1rem;
+            border-radius: 0.5rem; max-width: 90vw; max-height: 90vh;
         }
         .image-modal-content img {
-            max-width: 100%;
-            max-height: 85vh;
-            display: block;
+            max-width: 100%; max-height: 85vh; display: block;
         }
         .image-modal-close {
-            position: absolute;
-            top: -0.75rem;
-            right: -0.75rem;
-            background: white;
-            border: 2px solid #333;
-            border-radius: 50%;
-            width: 2rem;
-            height: 2rem;
-            font-size: 1.25rem;
-            font-weight: bold;
-            line-height: 1.75rem;
-            text-align: center;
-            cursor: pointer;
-            color: #333;
+            position: absolute; top: -0.75rem; right: -0.75rem;
+            background: white; border: 2px solid #333; border-radius: 50%;
+            width: 2rem; height: 2rem; font-size: 1.25rem; font-weight: bold;
+            line-height: 1.75rem; text-align: center; cursor: pointer; color: #333;
         }
-        .image-modal-close:hover {
-            background: #f0f0f0;
-        }
-        /* --- END MODAL STYLES --- */
+        .image-modal-close:hover { background: #f0f0f0; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -82,7 +44,7 @@
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center">
-                    <span class="font-bold text-2xl text-gray-800">FixYourCity</span>
+                    <a href="index.html" class="font-bold text-2xl text-gray-800">FixYourCity</a>
                 </div>
                 <div>
                     <a href="index.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300 font-medium">
@@ -118,17 +80,17 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-100">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Category</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Reported</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Reported By</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Evidence</th>
                                     </tr>
                                 </thead>
                                 <tbody id="pending-tbody" class="bg-white divide-y divide-gray-200"></tbody>
                             </table>
-                            <div id="pending-empty" class="hidden text-center text-gray-600 p-8"><p>No pending issues found.</p></div>
+                            <div id="pending-empty" class="text-center text-gray-600 p-8"><p>Loading pending issues...</p></div>
                         </div>
                     </div>
                 </div>
@@ -139,17 +101,17 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-100">
                                      <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Category</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Reported</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Reported By</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Evidence</th>
                                     </tr>
                                 </thead>
                                 <tbody id="progress-tbody" class="bg-white divide-y divide-gray-200"></tbody>
                             </table>
-                            <div id="progress-empty" class="hidden text-center text-gray-600 p-8"><p>No issues are currently in progress.</p></div>
+                            <div id="progress-empty" class="text-center text-gray-600 p-8"><p>Loading issues in progress...</p></div>
                         </div>
                     </div>
                 </div>
@@ -160,17 +122,17 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-100">
                                      <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue ID</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Category</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Location</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Reported</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Reported By</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Evidence</th>
                                     </tr>
                                 </thead>
                                 <tbody id="resolved-tbody" class="bg-white divide-y divide-gray-200"></tbody>
                             </table>
-                             <div id="resolved-empty" class="hidden text-center text-gray-600 p-8"><p>No issues have been resolved yet.</p></div>
+                             <div id="resolved-empty" class="text-center text-gray-600 p-8"><p>Loading resolved issues...</p></div>
                         </div>
                     </div>
                 </div>
@@ -179,135 +141,151 @@
         </section>
     </main>
 
+    <!-- Image Modal -->
     <div id="image-modal" class="image-modal-overlay hidden">
         <div class="image-modal-content">
             <button id="modal-close-btn" class="image-modal-close">&times;</button>
             <img id="modal-image" src="" alt="Reported Issue Evidence" />
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- NEW: Get Modal Elements ---
-            const imageModal = document.getElementById('image-modal');
-            const modalImage = document.getElementById('modal-image');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
+    
+    <!-- UPDATED FIREBASE SDKs (v9+ Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-            const defaultIssues = [
-                { id: "#F7C101", category: "Pothole", location: "Sector 62, Near Fortis Hospital", status: "Resolved", date: "01/11/2025", photoData: null },
-                { id: "#F7C102", category: "Garbage & Dumping", location: "Alpha 1, Commercial Belt, Gr. Noida", status: "In Progress", date: "05/11/2025", photoData: null },
-                { id: "#F7C103", category: "Broken Streetlight", location: "Pari Chowk (Underpass)", status: "Pending", date: "08/11/2025", photoData: null },
-                { id: "#F7C104", category: "Public Nuisance", location: "Botanical Garden Metro Station", status: "Resolved", date: "30/10/2025", photoData: null }
-            ];
+        const firebaseConfig = {
+          apiKey: "AIzaSyBKMqR9Gq_OzwPXFvKKF7E3xo6LknQ1iu4",
+          authDomain: "fixyourcity-165b4.firebaseapp.com",
+          projectId: "fixyourcity-165b4",
+          storageBucket: "fixyourcity-165b4.firebasestorage.app",
+          messagingSenderId: "803814194323",
+          appId: "1:803814194323:web:b9c44b707ff1bc2696a166",
+          measurementId: "G-SH58RM64ML"
+        };
 
-            let issues = JSON.parse(localStorage.getItem('fixYourCityIssues'));
-            if (!issues || issues.length === 0) {
-                issues = defaultIssues;
-                localStorage.setItem('fixYourCityIssues', JSON.stringify(defaultIssues));
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- Modal Elements & Functions ---
+        const imageModal = document.getElementById('image-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        const openModal = (imageUrl) => {
+            modalImage.src = imageUrl;
+            imageModal.classList.remove('hidden');
+        };
+        
+        const closeModal = () => {
+            imageModal.classList.add('hidden');
+            modalImage.src = ''; 
+        };
+
+        modalCloseBtn.addEventListener('click', closeModal);
+        imageModal.addEventListener('click', (event) => {
+            if (event.target === imageModal) closeModal();
+        });
+
+        // --- Status Styling Function ---
+        function getStatusClass(status) {
+            switch (status) {
+                case 'Resolved': return 'bg-green-100 text-green-800';
+                case 'In Progress': return 'bg-yellow-100 text-yellow-800';
+                case 'Pending': default: return 'bg-red-100 text-red-800';
             }
-            
-            const pendingIssues = issues.filter(issue => issue.status === 'Pending');
-            const progressIssues = issues.filter(issue => issue.status === 'In Progress');
-            const resolvedIssues = issues.filter(issue => issue.status === 'Resolved');
+        }
 
-            const pendingTbody = document.getElementById('pending-tbody');
-            const progressTbody = document.getElementById('progress-tbody');
-            const resolvedTbody = document.getElementById('resolved-tbody');
-
-            function getStatusClass(status) {
-                switch (status) {
-                    case 'Resolved': return 'bg-green-100 text-green-800';
-                    case 'In Progress': return 'bg-yellow-100 text-yellow-800';
-                    case 'Pending': default: return 'bg-red-100 text-red-800';
-                }
-            }
+        // --- Firestore Population Function ---
+        function populateTable(status, tbodyId, emptyMsgId) {
+            const issuesRef = collection(db, "issues");
+            const q = query(issuesRef, where("status", "==", status));
             
-            function populateTable(tbody, issueList, emptyMsgId) {
-                tbody.innerHTML = ''; 
+            const tbody = document.getElementById(tbodyId);
+            const emptyMsg = document.getElementById(emptyMsgId);
+
+            onSnapshot(q, (querySnapshot) => {
+                tbody.innerHTML = ''; // Clear table
                 
-                if (issueList.length === 0) {
-                    document.getElementById(emptyMsgId).classList.remove('hidden');
+                if (querySnapshot.empty) {
+                    emptyMsg.innerHTML = `<p>No ${status.toLowerCase()} issues found.</p>`;
+                    emptyMsg.classList.remove('hidden');
                     return;
                 }
                 
-                issueList.forEach(issue => {
+                emptyMsg.classList.add('hidden');
+                
+                querySnapshot.forEach((doc) => {
+                    const issue = doc.data();
+                    
                     const row = document.createElement('tr');
                     const statusClasses = `px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(issue.status)}`;
                     
-                    // --- MODIFIED: Create button with data-src ---
-                    let evidenceLink = '<span class="text-gray-400">N/A</span>';
-                    if (issue.photoData) {
-                        evidenceLink = `<button class="view-image-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-src="${issue.photoData}">View</button>`;
-                    }
+                    let evidenceButton = `<button class="view-image-btn text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium" data-src="${issue.imageUrl}">View</button>`;
                     
+                    const submittedDate = issue.submittedAt ? issue.submittedAt.toDate().toLocaleDateString('en-IN') : 'N/A';
+                    
+                    // Mask email for privacy
+                    const userEmail = issue.userEmail ? issue.userEmail.split('@')[0].substring(0, 3) + '...@' + issue.userEmail.split('@')[1] : 'Anonymous';
+
                     row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${issue.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${submittedDate}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.category}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.location}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${issue.date || 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${userEmail}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="${statusClasses}">
                                 ${issue.status}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            ${evidenceLink}
+                            ${evidenceButton}
                         </td>
                     `;
                     tbody.appendChild(row);
                 });
-            }
+            }, (error) => {
+                console.error(`Error getting ${status} issues: `, error);
+                emptyMsg.innerHTML = `<p>Could not load issues. Please try again.</p>`;
+                emptyMsg.classList.remove('hidden');
+            });
+        }
 
-            populateTable(pendingTbody, pendingIssues, 'pending-empty');
-            populateTable(progressTbody, progressIssues, 'progress-empty');
-            populateTable(resolvedTbody, resolvedIssues, 'resolved-empty');
+        // --- Load all tables on page load ---
+        populateTable('Pending', 'pending-tbody', 'pending-empty');
+        populateTable('In Progress', 'progress-tbody', 'progress-empty');
+        populateTable('Resolved', 'resolved-tbody', 'resolved-empty');
 
-            // --- Tab Switching Logic ---
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
+        // --- Tab Switching Logic ---
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    tabButtons.forEach(btn => btn.classList.remove('active', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    button.classList.add('active');
-                    const tabId = button.getAttribute('data-tab');
-                    document.getElementById(tabId).classList.add('active');
-                    tabButtons.forEach(btn => {
-                        if (!btn.classList.contains('active')) {
-                             btn.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-                        }
-                    });
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+                
+                tabButtons.forEach(btn => {
+                    if (!btn.classList.contains('active')) {
+                         btn.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    }
                 });
             });
-
-            // --- NEW: Event listener for image clicks ---
-            // We listen on the whole section to catch clicks from all 3 tables
-            const exploreSection = document.getElementById('explore-issues');
-            exploreSection.addEventListener('click', (event) => {
-                if (event.target.classList.contains('view-image-btn')) {
-                    const imageSrc = event.target.getAttribute('data-src');
-                    if (imageSrc) {
-                        modalImage.src = imageSrc;
-                        imageModal.classList.remove('hidden');
-                    }
-                }
-            });
-
-            // --- NEW: Function to close the modal ---
-            const closeModal = () => {
-                imageModal.classList.add('hidden');
-                modalImage.src = ''; // Clear src
-            };
-
-            // Add close listeners
-            modalCloseBtn.addEventListener('click', closeModal);
-            imageModal.addEventListener('click', (event) => {
-                if (event.target === imageModal) {
-                    closeModal();
-                }
-            });
         });
+
+        // --- Table Click Handler (Event Delegation) ---
+        const exploreSection = document.getElementById('explore-issues');
+        exploreSection.addEventListener('click', (event) => {
+            if (event.target.classList.contains('view-image-btn')) {
+                const imageUrl = event.target.getAttribute('data-src');
+                if (imageUrl) openModal(imageUrl);
+            }
+        });
+
     </script>
 </body>
 </html>
