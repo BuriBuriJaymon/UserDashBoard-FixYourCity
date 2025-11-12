@@ -192,65 +192,79 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- END COMPRESSION STEP ---
 
 
-            // --- NEW UPLOAD LOGIC with Progress ---
+            // --- *** THIS ENTIRE TRY/CATCH BLOCK IS REPLACED *** ---
+            // --- NEW UPLOAD LOGIC with Visible Progress Bar ---
             try {
-                // Upload the NEW compressedFile
-                const photoName = `images/${Date.now()}-${compressedFile.name}`;
-                const storageRef = ref(storage, photoName);
-
-                // *** Use uploadBytesResumable ***
-                const uploadTask = uploadBytesResumable(storageRef, compressedFile);
-
-                // Listen for state changes, errors, and completion
-                uploadTask.on('state_changed', 
-                    (snapshot) => {
-                        // Get task progress
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        submitButton.textContent = `Uploading... ${Math.round(progress)}%`;
-                    }, 
-                    (error) => {
-                        // Handle unsuccessful uploads
-                        console.error("Upload error: ", error);
-                        alert("Photo upload failed. Please try again.");
-                        submitButton.disabled = false;
-                        submitButton.textContent = originalButtonText;
-                    }, 
-                    async () => {
-                        // Handle successful uploads on complete
-                        submitButton.textContent = 'Saving report...';
-                        
-                        try {
-                            // 3. Get URL and Create Report in Firestore
-                            const photoURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-                            const reportData = {
-                                category: category,
-                                location: location,
-                                description: description,
-                                imageUrl: photoURL,
-                                imagePath: photoName, // Store path for potential deletion
-                                status: 'Pending',
-                                submittedAt: serverTimestamp(),
-                                userId: user.uid,
-                                userEmail: user.email 
-                            };
-
-                            await addDoc(collection(db, "issues"), reportData);
-
-                            // 4. Success
-                            alert('Report submitted successfully!');
-                            closeModal();
-                            window.location.href = 'my-reports.html'; // Redirect to My Reports
-                        
-                        } catch (saveError) {
-                            console.error("Error saving report to Firestore: ", saveError);
-                            alert("Photo uploaded, but saving the report failed. Please try again.");
-                            submitButton.disabled = false;
-                            submitButton.textContent = originalButtonText;
-                        }
-                    }
-                );
-
+              const photoName = `images/${Date.now()}-${compressedFile.name}`;
+              const storageRef = ref(storage, photoName);
+              const uploadTask = uploadBytesResumable(storageRef, compressedFile);
+            
+              // Progress bar DOM references
+              const progressContainer = document.getElementById('upload-progress-container');
+              const progressBar = document.getElementById('upload-progress-bar');
+            
+              progressContainer.classList.remove('hidden');
+              progressBar.style.width = '0%';
+              progressBar.textContent = '0%';
+            
+              uploadTask.on('state_changed',
+                (snapshot) => {
+                  // Update progress bar
+                  const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  progressBar.style.width = `${progress.toFixed(0)}%`;
+                  progressBar.textContent = `${progress.toFixed(0)}%`;
+                  submitButton.textContent = `Uploading... ${Math.round(progress)}%`;
+                },
+                (error) => {
+                  // Handle unsuccessful uploads and hide progress bar
+                  console.error("Upload error:", error);
+                  alert("Photo upload failed. Please try again.");
+                  submitButton.disabled = false;
+                  submitButton.textContent = originalButtonText;
+                  progressContainer.classList.add('hidden');
+                  progressBar.style.width = '0%';
+                  progressBar.textContent = '0%';
+                },
+                async () => {
+                  // Upload completed
+                  submitButton.textContent = "Saving report...";
+                  progressBar.style.width = '100%';
+                  progressBar.textContent = '100%';
+            
+                  try {
+                    const photoURL = await getDownloadURL(uploadTask.snapshot.ref);
+            
+                    const reportData = {
+                      category,
+                      location,
+                      description,
+                      imageUrl: photoURL,
+                      imagePath: photoName, // Store path for potential deletion
+                      status: "Pending",
+                      submittedAt: serverTimestamp(),
+                      userId: user.uid,
+                      userEmail: user.email,
+                    };
+            
+                    await addDoc(collection(db, "issues"), reportData);
+            
+                    alert("Report submitted successfully!");
+                    closeModal();
+                    window.location.href = "my-reports.html";
+                  } catch (saveError) {
+                    console.error("Error saving report to Firestore:", saveError);
+                    alert("Photo uploaded, but saving the report failed. Please try again.");
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
+                  }
+            
+                  // Hide progress bar for next time
+                  progressContainer.classList.add('hidden');
+                  progressBar.style.width = '0%';
+                  progressBar.textContent = '0%';
+                }
+              );
+            
             } catch (error) {
                 // This catches errors *before* the upload starts
                 console.error("Error setting up upload: ", error);
@@ -258,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
             }
+            // --- *** END OF REPLACED BLOCK *** ---
         });
     }
 });
